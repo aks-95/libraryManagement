@@ -10,7 +10,11 @@ import com.akshay.libraryManagement.entity.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @org.springframework.web.bind.annotation.RestController
+
+@RequestMapping("/user")
 public class RestController {
     @Autowired
     BookRepository bookRepository;
@@ -19,30 +23,17 @@ public class RestController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("book")
-    Book getBook(@RequestParam(defaultValue = "1") int id){
-         return bookRepository.findById(id);
-    }
-    @PostMapping("book")
-    Book setBook(@RequestBody Book book){
-        return bookRepository.save(book);
-    }
 
-    @GetMapping("bookItem")
-    BookItem getBookItem(@RequestParam(defaultValue = "1") int id){
-        return bookItemRepository.findById(id);
-    }
-
-    @PostMapping("bookItem")
-    BookItem setBookItem(@RequestBody BookItem bookItem){
-        return bookItemRepository.save(bookItem);
-    }
-
-    @GetMapping("user")
+    @GetMapping("id")
     Users getUser(@RequestParam(defaultValue = "1") int id){
         return userRepository.findById(id);
     }
-    @PostMapping("user")
+    @GetMapping("name")
+    List<Users> getUser(String name){
+        if(name==null) return (List<Users>) userRepository.findAll();
+        return userRepository.findByName(name);
+    }
+    @PostMapping("update")
     Users setUser(@RequestBody Users users){
         return userRepository.save(users);
     }
@@ -56,15 +47,15 @@ public class RestController {
         if(bookItem.getUserId()!=0){
             return "BookItem already assigned to another user";
         }
-        if (bookItem.getAvailableCount() <= 0) {
+        if (bookItem.getBook().getAvailableCount() <= 0) {
             return "No available copies of the book";
         }
         bookItem.setUserId(users.getId());
-        bookItem.setAvailableCount(bookItem.getAvailableCount() - 1);
+        bookItem.getBook().setAvailableCount(bookItem.getBook().getAvailableCount() - 1);
         users.addBookItem(bookItem);
         bookItemRepository.save(bookItem);
         userRepository.save(users);
-        return "Book assigned successfully to " + users;
+        return "Book assigned successfully to " + users.getId() +  " " + users.getName();
 
     }
 }

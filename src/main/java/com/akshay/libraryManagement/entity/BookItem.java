@@ -15,15 +15,19 @@ public class BookItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     int id;
-    int count;
-    @Setter
-    @Getter
-    int availableCount;
-    @Getter
     @ManyToOne
     @JoinColumn(name="book_id")
     Book book;
     int UserId;
+    String isbn;
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
     public int getId() {
         return id;
@@ -32,23 +36,6 @@ public class BookItem {
     public void setId(int id) {
         this.id = id;
     }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public int getAvailableCount() {
-        return availableCount;
-    }
-
-    public void setAvailableCount(int availableCount) {
-        this.availableCount = availableCount;
-    }
-
     public Book getBook() {
         return book;
     }
